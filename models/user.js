@@ -15,10 +15,10 @@ class User {
     const response = await db.query(`
       INSERT INTO users (username, password, first_name, last_name, phone, join_at)
       VALUES ($1, $2, $3, $4, $5, $6)
-      RETURN username
+      RETURN username, password, first_name, last_name, phone
     `,[username, password, first_name, last_name, phone, joinAt]); //need to hash pwd??
     
-    if(reponse.rows[0] !== 0) return {username, password, first_name, last_name, phone}
+    if(reponse.rows[0] !== 0) return {...response.rows[0]}
     else throw new ExpressError()
   }
 
@@ -28,7 +28,14 @@ class User {
 
   /** Update last_login_at for user */
 
-  static async updateLoginTimestamp(username) { }
+  static async updateLoginTimestamp(username) {
+    const logIn = new Date();
+    const response = await db.query(`
+        UPDATE users (username, password, first_name, last_name, phone, join_at)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        WHERE username=$1
+      `,[ ,username]); //need to hash pwd??
+  }
 
   /** All: basic info on all users:
    * [{username, first_name, last_name, phone}, ...] */
