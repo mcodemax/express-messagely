@@ -94,7 +94,7 @@ class User {
         FROM users
         WHERE username=$1
     `,[username])
-
+    
     if(!response.rows.length) throw new ExpressError("Invalid User", 404)
 
     return response.rows[0]
@@ -145,13 +145,13 @@ class User {
       SELECT m.id, m.body, m.sent_at, m.read_at,
       u.username, u.first_name, u.last_name, u.phone
         FROM users AS u JOIN messages AS m
-          ON u.username = m.to_username
+          ON u.username = m.from_username
         WHERE to_username=$1
     `,[username])
 
     return response.rows.map(msg => ({
       id: msg.id,
-      to_user: {
+      from_user: {
         username: msg.username,
         first_name: msg.first_name, 
         last_name: msg.last_name, 
