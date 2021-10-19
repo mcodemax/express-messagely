@@ -5,7 +5,7 @@ const { SECRET_KEY } = require("../config");
 
 /** Middleware: Authenticate user. */
 
-function authenticateJWT(req, res, next) {
+function authenticateJWT(req, res, next) {// see app.js included on all routes
   try {
     const tokenFromBody = req.body._token;
     const payload = jwt.verify(tokenFromBody, SECRET_KEY);
@@ -14,7 +14,8 @@ function authenticateJWT(req, res, next) {
   } catch (err) {
     return next();
   }
-}
+} //just decorates incoming request, and verifies token and creates a user property;
+//similar to session in flask-python
 
 /** Middleware: Requires user is authenticated. */
 
@@ -30,6 +31,7 @@ function ensureLoggedIn(req, res, next) {
 
 function ensureCorrectUser(req, res, next) {
   try {
+    console.log(req.user)
     if (req.user.username === req.params.username) {
       return next();
     } else {

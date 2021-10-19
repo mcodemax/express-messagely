@@ -37,7 +37,7 @@ class User {
         WHERE username=$1
     `,[username]);
     
-    if(!response.rows.length) throw new ExpressError("Invalid User", 404)
+    if(!response.rows.length) throw new ExpressError("Invalid User", 404);
     
     return await bcrypt.compare(password, response.rows[0].password);
   }
